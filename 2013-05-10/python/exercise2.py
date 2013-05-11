@@ -51,19 +51,63 @@ def GRID(args):
     V,cells = model
     verts = AA(list)(scipy.array(V) / AA(float)(args))
     return MKPOL([verts, AA(AA(lambda h:h+1))(cells), None])
+
 #---------------------------------------------------------
 #funzioni
 
 domain1D = INTERVALS(1)(32)
+dom2D = GRID([20,20])
 
 def image_bezierline(points):
-	c = BEZIER(S1)(points)
-	return MAP(c)(domain1D)
+    c = BEZIER(S1)(points)
+    return MAP(c)(domain1D)
+
 
 def image_hermiteline(points):
-	c = CUBICHERMITE(S1)(points)
-	return MAP(c)(domain1D)
+    c = CUBICHERMITE(S1)(points)
+    return MAP(c)(domain1D)
 
+
+def bezier_surface(points1,points2):
+    c1 = BEZIER(S1)(points1)
+    c2 = BEZIER(S1)(points2)
+    c = BEZIER(S2)([c2,c1])
+    return MAP(c)(dom2D)
+
+
+def trasla (p,v):
+    q = []
+    length=len(p)
+    for i in range(length):
+        q += [ADD([p[i],v])]
+    return q;
+
+
+def bezier_s2 (h0, spessore):
+    h00 = trasla(h0,spessore)
+    ch0 = BEZIER(S1)(h0)
+    ch00 = BEZIER(S1)(h00)
+    beziers2 = BEZIER(S2)([ch00,ch0,])
+    return MAP(beziers2)(dom2D);
+
+
+def bezier_s2_2punti (h0,v1, spessore):
+    h00 = trasla(h0,spessore)
+    v11 = trasla(v1, spessore)
+    ch0 = BEZIER(S1)(h0)
+    ch00 = BEZIER(S1)(h00)
+    cv1 = BEZIER(S1)(v1)
+    cv11 = BEZIER(S1)(v11)
+    beziers2 = BEZIER(S2)([cv1,ch0,ch00,cv11])
+    return MAP(beziers2)(dom2D);
+
+
+def reverse (p):
+    q = []
+    length=len(p)
+    for i in range(length):
+        q += [p[length-1-i]]
+    return q;
 
 
 #PROFILO SOPRA
@@ -98,5 +142,4 @@ profile_l8 = image_bezierline([[-5.6,0,-2],[-8.2,0,-1.9],[-8.1,0,-2.1],[-9,0,-1.
 profile_l = STRUCT([profile_l0,profile_l1,profile_l2,profile_l3,profile_l4,profile_l5,profile_l6,profile_l7,profile_l8])
 
 profile = STRUCT([profile_d, profile_s,profile_l])
-
 VIEW(profile)

@@ -51,6 +51,7 @@ def GRID(args):
     V,cells = model
     verts = AA(list)(scipy.array(V) / AA(float)(args))
     return MKPOL([verts, AA(AA(lambda h:h+1))(cells), None])
+
 #---------------------------------------------------------
 #funzioni
 
@@ -58,21 +59,55 @@ domain1D = INTERVALS(1)(32)
 dom2D = GRID([20,20])
 
 def image_bezierline(points):
-	c = BEZIER(S1)(points)
-	return MAP(c)(domain1D)
+    c = BEZIER(S1)(points)
+    return MAP(c)(domain1D)
 
 
 def image_hermiteline(points):
-	c = CUBICHERMITE(S1)(points)
-	return MAP(c)(domain1D)
+    c = CUBICHERMITE(S1)(points)
+    return MAP(c)(domain1D)
 
 
 def bezier_surface(points1,points2):
-	c1 = BEZIER(S1)(points1)
-	c2 = BEZIER(S1)(points2)
-	c = BEZIER(S2)([c2,c1])
-	return MAP(c)(dom2D)
+    c1 = BEZIER(S1)(points1)
+    c2 = BEZIER(S1)(points2)
+    c = BEZIER(S2)([c2,c1])
+    return MAP(c)(dom2D)
 
+
+def trasla (p,v):
+    q = []
+    length=len(p)
+    for i in range(length):
+        q += [ADD([p[i],v])]
+    return q;
+
+
+def bezier_s2 (h0, spessore):
+    h00 = trasla(h0,spessore)
+    ch0 = BEZIER(S1)(h0)
+    ch00 = BEZIER(S1)(h00)
+    beziers2 = BEZIER(S2)([ch00,ch0,])
+    return MAP(beziers2)(dom2D);
+
+
+def bezier_s2_2punti (h0,v1, spessore):
+    h00 = trasla(h0,spessore)
+    v11 = trasla(v1, spessore)
+    ch0 = BEZIER(S1)(h0)
+    ch00 = BEZIER(S1)(h00)
+    cv1 = BEZIER(S1)(v1)
+    cv11 = BEZIER(S1)(v11)
+    beziers2 = BEZIER(S2)([cv1,ch0,ch00,cv11])
+    return MAP(beziers2)(dom2D);
+
+
+def reverse (p):
+    q = []
+    length=len(p)
+    for i in range(length):
+        q += [p[length-1-i]]
+    return q;
 
 
 #PROFILO SOPRA
@@ -107,6 +142,7 @@ profile_l8 = image_bezierline([[-5.6,0,-2],[-8.2,0,-1.9],[-8.1,0,-2.1],[-9,0,-1.
 profile_l = STRUCT([profile_l0,profile_l1,profile_l2,profile_l3,profile_l4,profile_l5,profile_l6,profile_l7,profile_l8])
 
 profile = STRUCT([profile_d, profile_s,profile_l])
+
 #EXERCISE 3: WHEEL
 t0 = [[0,1.5,0],[1.5,0,0],[3,0,0],[0,-3,0]]
 t00 = CUBICHERMITE(S1)(t0)
@@ -115,7 +151,7 @@ t11 = CUBICHERMITE(S1)(t1)
 t10 = CUBICHERMITE(S2)([t11,t00,[0,0,2],[0,0,-2]])
 tire1 = MAP(t10)(dom2D)
 t01 = CUBICHERMITE(S2)([t00,t11,[0,0,-2],[0,0,2]])
-tire2 = MAP(w01)(dom2D)
+tire2 = MAP(t01)(dom2D)
 tire0 = STRUCT([tire1,tire2])
 tire = COLOR(BLACK)(STRUCT([tire0, R([1,2])(PI/2)] * 4))
 
@@ -123,22 +159,12 @@ r0 = [[0,1,0],[1,0,0],[2,0,0],[0,-2,0]]
 r00 = CUBICHERMITE(S1)(r0)
 r1 = [[0,0.8,0],[0.8,0,0],[1.6,0,0],[0,-1.6,0]]
 r11 = CUBICHERMITE(S1)(r1)
-r10 = CUBICHERMITE(S2)([r11,r00,[0,0,1],[0,0,-1]])
+r10 = CUBICHERMITE(S2)([r11,r00,[0,0,1.3],[0,0,-1.3]])
 rim1 = MAP(r10)(dom2D)
-r01 = CUBICHERMITE(S2)([r00,r11,[0,0,-1],[0,0,1]])
+r01 = CUBICHERMITE(S2)([r00,r11,[0,0,-1.3],[0,0,1.3]])
 rim2 = MAP(r01)(dom2D)
 rim0 = STRUCT([rim1,rim2])
 rim = COLOR(GRAY)(STRUCT([rim0, R([1,2])(PI/2)] * 4))
-
-
-r0 = [[0,1.1,0.3],[1.1,0,0.3],[2,0,0],[0,-2,0]]
-r00 = CUBICHERMITE(S1)(r0)
-r1 = [[0,0.8,0.1],[0.8,0,0.1],[1.8,0,0],[0,-1.8,0]]
-r11 = CUBICHERMITE(S1)(r1)
-r = BEZIER(S2)([r11,r00])
-rm = MAP(r)(dom2D)
-rm_r = COLOR(GRAY)(STRUCT([rm, R([1,2])(PI/2)] * 4))
-VIEW(STRUCT([rm_r,tire]))
 
 p = POLYLINE([[0,0],[0.2,0.2],[0,0.85],[-0.2,0.2],[0,0]])
 s = SOLIDIFY(p)
@@ -156,8 +182,8 @@ wheel = S([1,2,3])([0.9,0.9,0.9])(STRUCT([disk,rim,tire,rm_s,rm_st]))
 
 wheel_r = R([2,3])(PI/2)(wheel)
 
-wheel1 = T([1,2,3])([-4.1,-2.5,-1.5])(wheel_r)
-wheel2 = T([1,2,3])([6.15,-2.5,-1.5])(wheel_r)
+wheel1 = T([1,2,3])([-4.1,-3.8,-1.5])(wheel_r)
+wheel2 = T([1,2,3])([6.15,-3.8,-1.5])(wheel_r)
 wheel3 = R([1,2])(PI)(wheel1)
 wheel4 = R([1,2])(PI)(wheel2)
 wheel34 = T([1])([2.05])(STRUCT([wheel3,wheel4]))

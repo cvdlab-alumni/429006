@@ -159,21 +159,12 @@ r0 = [[0,1,0],[1,0,0],[2,0,0],[0,-2,0]]
 r00 = CUBICHERMITE(S1)(r0)
 r1 = [[0,0.8,0],[0.8,0,0],[1.6,0,0],[0,-1.6,0]]
 r11 = CUBICHERMITE(S1)(r1)
-r10 = CUBICHERMITE(S2)([r11,r00,[0,0,1],[0,0,-1]])
+r10 = CUBICHERMITE(S2)([r11,r00,[0,0,1.3],[0,0,-1.3]])
 rim1 = MAP(r10)(dom2D)
-r01 = CUBICHERMITE(S2)([r00,r11,[0,0,-1],[0,0,1]])
+r01 = CUBICHERMITE(S2)([r00,r11,[0,0,-1.3],[0,0,1.3]])
 rim2 = MAP(r01)(dom2D)
 rim0 = STRUCT([rim1,rim2])
 rim = COLOR(GRAY)(STRUCT([rim0, R([1,2])(PI/2)] * 4))
-
-
-r0 = [[0,1.1,0.3],[1.1,0,0.3],[2,0,0],[0,-2,0]]
-r00 = CUBICHERMITE(S1)(r0)
-r1 = [[0,0.8,0.1],[0.8,0,0.1],[1.8,0,0],[0,-1.8,0]]
-r11 = CUBICHERMITE(S1)(r1)
-r = BEZIER(S2)([r11,r00])
-rm = MAP(r)(dom2D)
-rm_r = COLOR(GRAY)(STRUCT([rm, R([1,2])(PI/2)] * 4))
 
 p = POLYLINE([[0,0],[0.2,0.2],[0,0.85],[-0.2,0.2],[0,0]])
 s = SOLIDIFY(p)
@@ -225,7 +216,7 @@ s_wheel_down22 = MAP(s_w22)(dom2D)
 
 s_wheelsurface1 = STRUCT([s_wheel_up1,s_wheel_down2,s_wheel_up11,s_wheel_down22])
 s_wheelsurface2 = R([1,3])(PI)(s_wheelsurface1)
-s_wheelsurface = STRUCT([s_wheelsurface1,s_wheelsurface2])
+s_wheelsurface = COLOR([0.1,0.1,0.1])(STRUCT([s_wheelsurface1,s_wheelsurface2]))
 
 center0 = bezier_surface([[0.09,0.45],[0,0.25],[0.3,0.45],[0.3,0]],
     [[-0.09,0.45],[0,0.25],[-0.3,0.45],[-0.3,0]])
@@ -235,11 +226,18 @@ center1 = bezier_surface([[-0.45,-0.1],[-0.2,-0.2],[0.2,-0.2],[0.45,-0.1]],
     [[-0.45,0],[0.45,0]])
 center1_ex = PROD([center1,Q(0.02)])
 
-steering_wheel0 = COLOR([0.1,0.1,0.1])(STRUCT([s_wheelsurface,center0_ex,center1_ex]))
+d = COLOR([0.1,0.1,0.1])(T([2,3])([0.04,0.02])(CYLINDER([0.17,0.05])(36)))
+d1 = COLOR(RED)(T([1,2,3])([-0.2,0.2,0.02])(CYLINDER([0.05,0.03])(36)))
+d2 = COLOR(RED)(T([1,2,3])([0.17,0.24,0.02])(CYLINDER([0.04,0.03])(36)))
+d3 = COLOR([0.1,0.1,0.1])(T([1,2,3])([0.21,0.14,0.02])(CYLINDER([0.03,0.03])(36)))
+
+center = COLOR([0.5,0.5,0.5])(STRUCT([center0_ex,center1_ex]))
+steering_wheel0 = STRUCT([s_wheelsurface,center,d,d1,d2,d3])
 steering_wheel_s = S([1,2,3])([1.6,1.6,1.6])(steering_wheel0)
 steering_wheel_r0 = R([1,2])(-PI/2)(steering_wheel_s)
 steering_wheel_r1 = R([1,3])(-PI/3)(steering_wheel_r0)
-steering_wheel = T([1,2])([-1.8,-1.3])(steering_wheel_r1)
+steering_wheel = T([1,2])([-1.6,-1.3])(steering_wheel_r1)
+
 
 
 #VIEW(STRUCT([profile,wheels,steering_wheel]))
@@ -274,8 +272,6 @@ c5 = BEZIER(S1)(p5)
 c45 = BEZIER(S2)([c5,c4])
 c45map = MAP(c45)(dom2D)
 
-
-##########################
 p6 = [[4.6,-3.8,1.9],[7.2,-3.8,1],[7.6,-3.8,1]] 
 p7 = [[4.6,-3.8,-2],[7.6,-3.8,-2],[0.3,0,8.9],[-0.3,0,-8.9]]
 c6 = BEZIER(S1)(p6)
@@ -306,7 +302,6 @@ c1011map = MAP(c1011)(dom2D)
 facciata_laterale_destra = STRUCT([c01map,c23map,c45map, c67map,c89map,c1011map])
 
 #FACCIATA LATERALE SINISTRA
-
 c00 = BEZIER(S1)(trasla(reverse(p0),[0,7.6,0]))
 c11 = BEZIER(S1)(trasla(reverse(p1),[0,7.6,0]))
 c44 = BEZIER(S1)(trasla(reverse(p4),[0,7.6,0]))
@@ -325,16 +320,15 @@ c8899map = MAP(c8899)(dom2D)
 c10101111 = BEZIER(S2)([c1111,c1010])
 c10101111map = MAP(c10101111)(dom2D)
 
-
 facciata_laterale_sinistra = STRUCT([c32map,c0011map, c4455map,c8899map, c76map,c10101111map])
 facciate_laterali = STRUCT([facciata_laterale_sinistra,facciata_laterale_destra])
-VIEW(facciate_laterali)
-#PARTE SUPERIORE
-a0 = BEZIER(S1)([[-0.5,-2.8,2.2],[-0.5,-3,2.3],[1.2,-2.5,2.8],[2.5,-3,2.8],[4.6,-3.8,1.9]])
-a1 = BEZIER(S1)([[-0.5,-2.8,2.2],[3.5,-3,0.5],[2.5,-3.8,-0.5], [4.6,-3.8,1.9]])
 
-a00 = BEZIER(S1)([[-0.5,2.8,2.2],[-0.5,3,2.3],[1.2,2.5,2.8],[2.5,3,2.8],[4.6,3.8,1.9]])
-a11 = BEZIER(S1)([[-0.5,2.8,2.2],[3.5,3,0.5],[2.5,3.8,-0.5], [4.6,3.8,1.9]])
+#PARTE SUPERIORE
+a0 = BEZIER(S1)([[-0.5,-2.8,2],[-0.5,-3,2.8],[1.2,-2.5,2.9],[2.5,-3,2.9],[4.6,-3.8,1.9]])
+a1 = BEZIER(S1)([[-0.5,-2.8,2],[3.5,-3,0.8],[3,-3.8,-0.2], [4.6,-3.8,1.9]])
+
+a00 = BEZIER(S1)([[-0.5,2.8,2],[-0.5,3,2.8],[1.2,2.5,2.9],[2.5,3,2.9],[4.6,3.8,1.9]])
+a11 = BEZIER(S1)([[-0.5,2.8,2],[3.5,3,0.8],[3,3.8,-0.2], [4.6,3.8,1.9]])
 
 a01 = BEZIER(S2)([a1,a0,a00,a11])
 a01map = MAP(a01)(dom2D)
@@ -350,7 +344,18 @@ a33 = bezier_s2(a3,[0,7.6,0])
 a4 = reverse([[8.6,-3.8,1],[9.4,-3.8,-1.8],[8.9,-3.8,-1.3],[8.6,-3.8,-1.6],[7.6,-3.8,-2]])
 a44 = bezier_s2(a4,[0,7.6,0])
 
-top = STRUCT([a01map,a22,a33,a44])
+a5 = [[4.6,-3.8,-2],[-2.6,-3.8,-2]]
+a55 = bezier_s2(a5,[0,7.6,0])
+
+top = STRUCT([COLOR([0.1,0.1,0.1])(a01map),a22,a33,a44,a55])
 carrozzeria = COLOR(YELLOW)(STRUCT([facciate_laterali,top]))
-car = STRUCT([carrozzeria,profile,wheels,steering_wheel])
+
+#FINESTRINI
+b0 = BEZIER(S1)([[-2.6,-3.6,0.6],[-0.6,-2.6,2]])
+b1 = BEZIER(S1)([[-2.6,3.6,0.6],[-0.6,2.6,2]])
+b2 = BEZIER(S2)([b0,b1])
+
+glass = COLOR([230.0/255, 1.0, 1.0, 0.5])(MAP(b2)(dom2D))
+
+car = STRUCT([glass,carrozzeria,profile,wheels,steering_wheel])
 VIEW(car)
