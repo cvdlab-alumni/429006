@@ -95,3 +95,4 @@ var int_h5 = MAP(BEZIER(S1)([Su0,Su0_int]))(dom2D)
 var handle = STRUCT([ext_h1,ext_h2,ext_h3,int_h1,int_h2,int_h3,int_h4,int_h5])
 
 var cup = STRUCT([saucer,cup_bottom,cup_form,handle])
+DRAW(cup)

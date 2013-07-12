@@ -180,4 +180,3 @@ var partial_tp = STRUCT([partial_tp_white,partial_tp_black])
 var carafebottom = rotate_form(partial_tp,[0,1],2*PI/5,4)
 
 var carafe = STRUCT([carafe_form,handle,carafebottom,sb])
-DRAW(carafe)

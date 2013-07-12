@@ -76,3 +76,4 @@ var sb = T([2])([-0.5])(sb_bottom)
 
 
 var sugarbowl = STRUCT([sugarbowl_form,cover,sb])
+DRAW(sugarbowl)

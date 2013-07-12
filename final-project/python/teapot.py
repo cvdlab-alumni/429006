@@ -182,5 +182,5 @@ su4 = BEZIER(S1)([[2.5,0,2.8],[2.4,-0.2,2.9],[2.1,-0.2,3],[2.3,0,3.1]])
 spout2 = MAP(COONSPATCH([su3,su4,sv1,sv2]))(dom2D)
 spout = COLOR([1,1,1])(S([1,2,3])([0.35,0.35,0.35])(STRUCT([spout1,spout2])))
 
-teapot = STRUCT([teapot_form,handle,spout,cover,teapot1,sb])
+teapot = STRUCT([teapot_form,handle,spout,cover,sb])
 VIEW(teapot)

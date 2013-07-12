@@ -126,7 +126,7 @@ mt1 = T([1,2,3])([-0.35,0.23,4.6])(model)
 mt2 = T([1,2,3])([4.25,0.23,2.1])(model)
 mt3 = T([1,2,3])([0.2,0.23,2.1])(model)
 
-struct = COLOR([184.0/255, 115.0/255, 51.0/255])(STRUCT([cs,csb,ctb,ct,s,b,mt,mt1,mt2,mt3]))
+struct = COLOR([101.0/255, 67.0/255, 33.0/255])(STRUCT([cs,csb,ctb,ct,s,b,mt,mt1,mt2,mt3]))
 
 SIMPLEX_GRID = COMP([INSR(PROD),AA(QUOTE)])
 
@@ -191,7 +191,7 @@ struct_rif = STRUCT([rif,srt,cx2t,cx2tb,f1t,f2t])
 rif2 = T([1])([4.7])(struct_rif)
 rifinitura = STRUCT([struct_rif,rif2])
 
-sedia1 = COLOR([184.0/255, 115.0/255, 51.0/255])(STRUCT([rifinitura,struct]))
+sedia1 = COLOR([101.0/255, 67.0/255, 33.0/255])(STRUCT([rifinitura,struct]))
 
 #schienale
 
@@ -230,7 +230,7 @@ interno1 = SIMPLEX_GRID([[-1.05,2.4],[-5.575,0.05],
 	[-2.8,0.375,-0.5,0.23,-0.5,0.23,-0.5,0.23,-0.5,0.23,-0.5,0.23,-0.5,0.23,-0.5,0.23,-0.5,0.23,-0.5,0.385]]) 
 interno2 = SIMPLEX_GRID([[-1.05,0.5,-0.5,0.4,-0.5,0.5],[-5.575,0.05],[-2.8,7.1]]) 
 schienale_int = STRUCT([sc1,scr1,cil3,cil3t,interno1,interno2])
-schienale = COLOR([184.0/255, 115.0/255, 51.0/255])(T([2,3])([-0.4,2.1])(R([2,3])(-PI/9)(STRUCT([schienale_int,schienale_ext]))))
+schienale = COLOR([101.0/255, 67.0/255, 33.0/255])(T([2,3])([-0.4,2.1])(R([2,3])(-PI/9)(STRUCT([schienale_int,schienale_ext]))))
 
 #sedile
 
@@ -248,9 +248,9 @@ var1l = MAP(CYLINDRICALSURFACE([l1,[0,0,0.3]]))(dom2D)
 sx = STRUCT([v12,v21,var1l,var2l,var3l])
 srt = T([1,2])([4.5,5.5])(R([1,2])(PI)(sx))
 centro = T([1,3])([0.8,2.3])(CUBOID([2.9,5.5,0.3]))
-sedile = COLOR([184.0/255, 115.0/255, 51.0/255])(STRUCT([centro, srt,sx]))
+sedile = COLOR([101.0/255, 67.0/255, 33.0/255])(STRUCT([centro, srt,sx]))
 
-#funghetti
+#knob
 
 domain_semisphere = PROD([INTERVALS(PI)(24),INTERVALS(PI)(36)])
 def partial_sphere (radius,domain):
@@ -263,19 +263,17 @@ def partial_sphere (radius,domain):
 model1 = T([3])([0.1])(partial_sphere(0.15,domain_semisphere))
 d = CYLINDER([0.1,0.1])(24);
 d1 = T([3])([0.09])(CYLINDER([0.15,0.01])(24));
-fung = STRUCT([model1,d,d1]);
+kb = STRUCT([model1,d,d1]);
 
-#da vedere ancora
-
-dt1 = T([1,2,3])([-0.25,5.5,5])(fung)
+dt1 = T([1,2,3])([-0.25,5.5,5])(kb)
 dt2 = T([2,3])([0.1,0.75])(R([2,3])(-PI/20)(dt1))
 dt3 = T([1,2,3])([0.02,0.2,1.4])(R([2,3])(-2*PI/20)(dt1))
 dt4 = T([1,2,3])([0.03,0.285,2])(R([2,3])(-3*PI/20)(dt1))
 dt5 = T([1,2,3])([0.04,0.45,2.45])(R([2,3])(-4*PI/20)(dt1))
-funghetti_left = STRUCT([dt1,dt2,dt3,dt4,dt5])
-funghetti_right = T([1])([4.95])(funghetti_left)
+knob_left = STRUCT([dt1,dt2,dt3,dt4,dt5])
+knob_right = T([1])([4.95])(knob_left)
 
-funghetti = COLOR([184.0/255, 115.0/255, 51.0/255])(STRUCT([funghetti_left,funghetti_right]))
+knob = COLOR([101.0/255, 67.0/255, 33.0/255])(STRUCT([knob_left,knob_right]))
 
 cilindro = CYLINDER([0.07,6])(24)
 cilindro_r = R([1,3])(PI/2)(cilindro)
@@ -291,11 +289,10 @@ cil4r = R([1,3])(PI/2)(cil4)
 cil4t1 = T([1,2,3])([1.4,5.6,2.65])(cil4r)
 cil4t2 = T([1,2,3])([3.5,5.6,2.65])(cil4r)
 cerniera = COLOR([0.3,0.3,0.3])(STRUCT([cil4t2,cil4t1]))
-VIEW(cerniera)
 #ruote
 
 domain_wheel = PROD([INTERVALS(PI/2)(24),INTERVALS(5*PI/8-3*PI/8)(36)])
-model1 = COLOR([184/255, 115/255, 51/255])(partial_sphere(0.3,domain_wheel))
+model1 = COLOR([101.0/255, 67.0/255, 33.0/255])(partial_sphere(0.3,domain_wheel))
 disk = CYLINDER([0.15,0.2])(24)
 disk_r = R([1,3])(PI/2)(disk)
 disk_t = T([1,2,3])([0.1,0.08,0.08])(disk_r)
@@ -303,5 +300,5 @@ ruota = STRUCT([COLOR([0.3,0.3,0.3])(disk_t),T([1])([-0.1])(model1)])
 ruota1 = T([1,2])([-0.1,6.5])(ruota)
 ruota2 = T([1,2])([4.6,6.5])(ruota)
 ruote = STRUCT([ruota2,ruota1])
-sedia = STRUCT([sedia1,sedile,schienale,funghetti,cil_sf,cerniera,ruote])
+sedia = STRUCT([sedia1,sedile,schienale,knob,cil_sf,cerniera,ruote])
 VIEW(sedia)
